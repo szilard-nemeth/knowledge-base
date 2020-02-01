@@ -155,12 +155,3 @@ Command to query reserved block count:
 Command to change reserved block count, -m0 means 0 percent:
 
 ```sudo /sbin/tune2fs -m0 /dev/md0```
-
-Git commands
-============
-1. Change commit message all at once (remove some part of it)
-
-```git filter-branch -f --msg-filter 'sed "s/<strtoreplace>//g"' -- --all```
-
-2. Print list of changed files (name only)
-`git diff --name-only`
