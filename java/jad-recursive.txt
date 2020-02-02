@@ -1,0 +1,7 @@
+jad -o -r -sjava -dsrc bin/**/*.class
+
+-o: overwrite without question
+-r: restore package directory structure
+-s: output file extension (default: .jad)
+-d: target directory
+last parameter: class file folder
