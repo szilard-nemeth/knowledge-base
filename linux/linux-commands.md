@@ -51,6 +51,11 @@ Jar commands
 
 ```unzip -p <jarfile> org/apache/hadoop/yarn/api/protocolrecords/ResourceTypes.class```
 
+5. List and grep for files in jars: 
+
+Finding ObjectMapper.class in all jars found from service-dep.tar.gz
+```for i in `find ~/Downloads/service-dep -iname "*jar"`; do [[ `unzip -Z1 $i | grep ObjectMapper\.class | wc -l` -gt 0 ]] && echo $i; done```
+
 Networking commands 
 ===================
 
@@ -134,7 +139,10 @@ Other tricks
 ```while true; do date +'%H:%M:%S:%N' | tee -a /tmp/tmp2 && find /sys/fs/cgroup | grep hadoop 2>&1 | tee -a /tmp/tmp2; sleep 1; done```
 
 2. Get OS version: 
-`lsb_release -ana`
+- `lsb_release -ana`
+- `uname -a`
+- `cat /etc/os-release`
+
 
 Disk management
 ============
