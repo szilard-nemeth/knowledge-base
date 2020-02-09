@@ -163,3 +163,9 @@ Command to query reserved block count:
 Command to change reserved block count, -m0 means 0 percent:
 
 ```sudo /sbin/tune2fs -m0 /dev/md0```
+
+
+Process commands
+============
+Kill process based on grep expression:
+```kill $(ps aux | grep 'mapreduce-examples' | awk '{print $2}')```
