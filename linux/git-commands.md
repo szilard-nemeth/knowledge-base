@@ -26,3 +26,6 @@ More info: https://content.pivotal.io/blog/git-add-e
 6. List remote branches
 
 `git ls-remote --heads <remote-name>`
+
+7. Get repo root directory
+`git rev-parse --show-toplevel`
