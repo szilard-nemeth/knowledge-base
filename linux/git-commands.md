@@ -29,3 +29,9 @@ More info: https://content.pivotal.io/blog/git-add-e
 
 7. Get repo root directory
 `git rev-parse --show-toplevel`
+
+8. Remove accidentally added files
+```
+git st --porcelain | grep AD | cut -d " " -f2 | xargs git co --
+git st --porcelain | grep ".*.class" | cut -d ' ' -f3 | xargs git reset HEAD
+```
