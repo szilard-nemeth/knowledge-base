@@ -1,0 +1,4 @@
+<int:message-history/>
+<int:channel id="trace-log-channel"/>
+<int:wire-tap channel="trace-log-channel" pattern="*-channel"/>
+<int:logging-channel-adapter log-full-message="true" channel="trace-log-channel"/>
