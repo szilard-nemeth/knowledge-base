@@ -102,6 +102,11 @@ All push/pull operations will be automatically go to origin/serverfix from this 
 * `git push origin serverfix:awesomebranch`: pushes the local serverfix branch to the remote branch called 'awesomebranch'. 'awesomebranch' will be created if not exist
 * `git push origin :side`: pushing nothing to origin's side branch. Technically this command delete the side remote branch
 
+#### Disable git push for an origin
+https://stackoverflow.com/questions/10260311/git-how-to-disable-push
+`git remote set-url --push origin no_push`
+
+### Fetch / Pull
 
 * `git fetch`: Downloads all the commits from the remote onto all the remote branches
 Generic form: `git fetch <remote_name> <branch_to_fetch_from>:<local_branch_to_fetch>`

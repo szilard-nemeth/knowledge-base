@@ -169,3 +169,7 @@ Process commands
 ============
 Kill process based on grep expression:
 ```kill $(ps aux | grep 'mapreduce-examples' | awk '{print $2}')```
+
+Wait for process to complete by its pid:
+```tail --pid=$pid -f /dev/null```
+Details: https://unix.stackexchange.com/a/427133/189441
