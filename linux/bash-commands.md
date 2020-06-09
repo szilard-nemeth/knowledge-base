@@ -1,10 +1,12 @@
-1. Change login shell
+## Bash commands
+
+Change login shell
 
 `chsh -s /bin/bash`
 
 More info: https://www.computerhope.com/unix/chsh.htm
 
-2. Loop through string variable, separated by comma
+Loop through string variable, separated by comma
 ```
 variable=abc,def,ghij
 for i in ${variable//,/ }
@@ -16,3 +18,31 @@ done
 
 More info: https://stackoverflow.com/a/35894538/1106893
 http://www.tldp.org/LDP/abs/html/string-manipulation.html
+
+
+## Bash functions
+
+Function to check status of command: 
+```
+function check_status_of_cmd {
+    "$@"
+    local status=$?
+    if [ $status -ne 0 ]; then
+        echo "error with $1" >&2
+    fi
+    return $status
+}
+```
+
+## Bash tricks
+
+### Append string to each element of an array
+https://stackoverflow.com/a/6426901
+```
+array=(a b c d e)
+array=( "${array[@]/%/_content}" )
+printf '%s\n' "${array[@]}"
+```
+
+### Get domain name from URL
+`echo http://example.com/index.php | awk -F[/:] '{print $4}'`

@@ -112,7 +112,7 @@ Rsync / SSH / scp commands
 
 3. Scp a file from a remote host
 
-```scp snemeth@casefiles.vpc.cloudera.com:642171.tar.gz /Users/szilardnemeth/Downloads/```
+```scp snemeth@<HOST>:642171.tar.gz /Users/szilardnemeth/Downloads/```
 
 
 Text manipulation commands

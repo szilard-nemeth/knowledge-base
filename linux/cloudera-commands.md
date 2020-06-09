@@ -13,7 +13,7 @@ YARN downstream commands
 ```yarn jar /opt/cloudera/parcels/CDH-6.x-1.cdh6.x.p0.858611/jars/hadoop-yarn-applications-distributedshell-3.0.0-cdh6.x-SNAPSHOT.jar -jar /opt/cloudera/parcels/CDH-6.x-1.cdh6.x.p0.858611/jars/hadoop-yarn-applications-distributedshell-3.0.0-cdh6.x-SNAPSHOT.jar -shell_command "nvndia-smi" -container_resources memory-mb=2048,yarn.io/gpu=1```
 
 2. Start sleep job with resources
-sudo -u systest hadoop jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-tests.jar sleep -Dmapreduce.job.queuename=root.default -Dmapreduce.reduce.resource.gpu=7 -Dyarn.app.mapreduce.am.resource.gpu=11 -m 1 -r 1 -mt 1 -rt 90000
+```sudo -u systest hadoop jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-tests.jar sleep -Dmapreduce.job.queuename=root.default -Dmapreduce.reduce.resource.gpu=7 -Dyarn.app.mapreduce.am.resource.gpu=11 -m 1 -r 1 -mt 1 -rt 90000```
 
 YARN upstream commands
 ======================
