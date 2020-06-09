@@ -137,3 +137,13 @@ e.g. if we were standing on the local 'bar' branch, origin/master will be merged
 # VIEWING HISTORY
 
 * Get commits touched a range of lines in a specific file (between lines 52 and 63): `git blame -L52,+11 -- path/to/file`
+
+# ALTERING HISTORY
+
+## Removing sensitive data
+https://help.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository
+```
+$ git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA" \
+  --prune-empty --tag-name-filter cat -- --all
+```
