@@ -173,3 +173,7 @@ Kill process based on grep expression:
 Wait for process to complete by its pid:
 ```tail --pid=$pid -f /dev/null```
 Details: https://unix.stackexchange.com/a/427133/189441
+
+
+Print all process names that are connected to the internet: 
+```sudo lsof -nPi | cut -f 1 -d " " | uniq | tail -n  +2```
