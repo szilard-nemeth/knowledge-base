@@ -46,3 +46,21 @@ printf '%s\n' "${array[@]}"
 
 ### Get domain name from URL
 `echo http://example.com/index.php | awk -F[/:] '{print $4}'`
+
+
+### Get path and last dir of full path
+https://superuser.com/a/443862
+```
+local lastdir=${file##*/}
+local parentpath=${file%/*}
+```
+
+### Replace spaces with space + escape in paths
+Example: `/Users/szilardnemeth/Library/Application Support/Google/Chrome//Profile 1/History`
+``` 
+echo $file | sed 's/ /\\ /g'
+```
+Reverse operation:
+```
+local profile=$(basename "${parentpath}" | tr -d "\\" | tr -d " ") 
+```
