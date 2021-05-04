@@ -64,3 +64,13 @@ Reverse operation:
 ```
 local profile=$(basename "${parentpath}" | tr -d "\\" | tr -d " ") 
 ```
+
+### Parse comma-separated string into an array
+```
+string="some,comma,separated,text"
+IFS=', ' read -r -a array <<< "$string"
+
+echo ${array[0]}
+echo ${array[1]}
+echo ${array[@]}
+```

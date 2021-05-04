@@ -21,6 +21,21 @@ File operations (find / ls)
 
 ```find /opt/hadoop/share/hadoop/yarn/ -iname 'hadoop-yarn-server*nodemanager*' ! -iname "*test*.jar" ! -iname "*sources*jar" -printf "unzip -c %p | grep -q '' && echo %p\n" | sh```
 
+6. Find and do something with results:
+```
+find . -type d -name venv -print0 | xargs -0 <command>
+```
+
+Example: 
+```
+find . -type d -name venv -print0 | xargs -0 -I % find % -type d | grep ".*pythoncommons\|python_commons.*"
+```
+
+7. Find + xargs, use special replacement character
+```
+find . -type d -name venv -print0 | xargs -0 -I % sh -c 'find % -type d'
+```
+
 Compression commands
 ===========================
 1. Compress a folder with tar
