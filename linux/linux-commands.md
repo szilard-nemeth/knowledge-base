@@ -26,6 +26,12 @@ File operations (find / ls)
 find . -type d -name venv -print0 | xargs -0 <command>
 ```
 
+7. Cat a file, then invoke xargs per line:
+Related SO answer: https://stackoverflow.com/a/65708689/1106893
+```
+cat ~/Downloads/tmp | xargs -n1 -I{} md5 {}
+```
+
 Example: 
 ```
 find . -type d -name venv -print0 | xargs -0 -I % find % -type d | grep ".*pythoncommons\|python_commons.*"
