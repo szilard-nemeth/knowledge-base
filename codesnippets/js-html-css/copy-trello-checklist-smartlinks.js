@@ -1,8 +1,8 @@
 copy($(".checklist-item:not(.checklist-item-checked)").map(function() {
   var e = $(this),
-      item = e.find(".checklist-item-details-text").text()
-  
+  item = e.find(".checklist-item-details-text").text()
   var smartlinks = e.find(".atlaskit-smart-link")
+  
   if (smartlinks.length) {
   	//sanity check
   	if (smartlinks.length != 1) {
