@@ -1,5 +1,9 @@
-var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
-$$ = null;$ = null;$= jQuery;
+var script = document.createElement('script');
+script.src = "https://code.jquery.com/jquery-3.4.1.min.js";
+document.getElementsByTagName('head')[0].appendChild(script);
+$$ = null;
+//$ = null;
+//$ = jQuery;
 
 copy($(".pushbubble").map(function() {
 	var e = $(this),
