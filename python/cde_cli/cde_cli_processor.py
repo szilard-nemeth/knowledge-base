@@ -1,14 +1,18 @@
 import errno
 import io
 import json
+import logging
 import os
 import subprocess
 from builtins import ValueError
+from json import JSONDecodeError
 from typing import List, Tuple, Callable
 
-"""
-Some great examples are copied from here: https://realpython.com/python-subprocess/#communication-with-processes
-"""
+from definitions import CLI_SIMULATOR_FILE_PATH, CDE_API_USER_PASSWORD_ENV_VAR
+
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.INFO)
 
 
 class CdeCliJsonParser:
@@ -17,24 +21,42 @@ class CdeCliJsonParser:
 
     @staticmethod
     def create_default_for_cde_cli(cmd: List[str]):
-        if not os.getenv("CDE_API_USER_PASSWORD"):
-            raise ValueError("Please set environment variable: CDE_API_USER_PASSWORD")
+        if not os.getenv("%s" % CDE_API_USER_PASSWORD_ENV_VAR):
+            raise ValueError("Please set environment variable: %s" % CDE_API_USER_PASSWORD_ENV_VAR)
         actions = [
             LineAction("WARN: Plaintext or insecure TLS connection requested", SubprocessHandler.send_input, ["yes"]),
-            LineAction("API User Password:", SubprocessHandler.send_input, [os.getenv("CDE_API_USER_PASSWORD")])]
+            LineAction("API User Password:", SubprocessHandler.send_input, [os.getenv("%s" % CDE_API_USER_PASSWORD_ENV_VAR)])]
         ignore_output = ["cde job list "]
-        return SubprocessHandler(cmd, ignore_output, actions)
+
+        # stdout.readline() and stdout.readlines() won't work with the output of cde cli.
+        # These methods would block forever as cde cli wouldn't print a newline at the end of the line, apparently.
+        # line = process.stdout.readlines().decode('utf-8')
+        # line = process.stdout.readline().decode('utf-8')
+        def looped_data_read_func(data):
+            return data.startswith("[") and not data.endswith("]")
+
+        return SubprocessHandler(cmd, ignore_output, actions,
+                                 looped_data_read_func=looped_data_read_func)
 
     def run(self):
         self.proc_handler.run()
 
     def parse_job_names(self):
         self.proc_handler.run()
+        if self.proc_handler.exit_code != 0:
+            raise ValueError("Underlying process failed. "
+                             "Command was: {} "
+                             "stderr from process: {}".format(self.proc_handler.cmd, self.proc_handler.stderr))
         return self.get_jobs(filter_type="airflow")
 
     def get_jobs(self, filter_type=None):
+        LOG.info("Decoding json: %s", self.proc_handler.stored_lines)
         json_str = "\n".join(self.proc_handler.stored_lines)
-        parsed_json = json.loads(json_str)
+        try:
+            parsed_json = json.loads(json_str)
+        except JSONDecodeError as e:
+            LOG.error("Invalid json output from cde cli process. output was: '%s'", json_str)
+            raise e
 
         job_names = []
         for job in parsed_json:
@@ -64,54 +86,43 @@ class LineAction:
 
 
 class SubprocessHandler:
-    def __init__(self, cmd: List[str], ignore_output: List[str], line_handlers: List[LineAction], print_all=True):
+    def __init__(self, cmd: List[str],
+                 ignore_output: List[str],
+                 line_handlers: List[LineAction],
+                 looped_data_read_func: Callable[[str], bool],
+                 print_all=True):
         self.cmd = cmd
         self.ignore_out_lines = ignore_output
         self.line_actions = line_handlers
-        self.max_empty_lines_at_end = 5  # This is a hacky way to decide when input is over
-        self.empty_lines_at_end = 0
-        self.exit_code = None
+        self.looped_data_read_func = looped_data_read_func
         self.print_all = print_all
+        self.stderr = None
+        self.exit_code = None
+        self.exited = False
         self.stored_lines = []
 
     def read_lines(self, process) -> List[str]:
         orig_exit_code = self.exit_code
         self.exit_code = process.poll()
-        exited = orig_exit_code != self.exit_code
-
-        # This won't work with cde cli, needs more investigation
-        # line = process.stdout.readlines().decode('utf-8')
-        ret_lines = []
+        self.exited = orig_exit_code != self.exit_code
         data = process.stdout.read1().decode('utf-8')
 
-        # HACK: Special case for json data :(
-        if data.startswith("[") and not data.endswith("]"):
-            # Assuming not all the json content has been read
-            all_data = data
-            while process.poll() is None:
-                data = process.stdout.read1().decode('utf-8')
-                all_data += data
-            return all_data.split("\n")
+        if self.exited and not data:
+            return []
+
+        if self.looped_data_read_func:
+            if self.looped_data_read_func(data):
+                all_data = data
+                while process.poll() is None:
+                    data = process.stdout.read1().decode('utf-8')
+                    all_data += data
+                return all_data.split("\n")
 
         if "\n" in data:
             lines = data.split("\n")
-            lines = [l.strip() for l in lines]
-            ret_lines.extend(lines)
+            return [l.strip() for l in lines]
         else:
-            ret_lines.append(data.strip())
-
-        if self.exit_code is None and not exited:
-            return ret_lines
-
-        # Process exited
-        while True:
-            line = process.stdout.readline().decode('utf-8')
-            if not line:
-                self.empty_lines_at_end += 1
-            else:
-                ret_lines.append(line.strip())
-            if self.empty_lines_at_end >= self.max_empty_lines_at_end:
-                return ret_lines
+            return [data.strip()]
 
     @staticmethod
     def send_input(handler, action, proc, *input):
@@ -139,16 +150,18 @@ class SubprocessHandler:
                 for line in lines:
                     if self._check_for_ignores(line):
                         continue
-
                     if self._check_for_handlers(line, process):
                         continue
 
-                    # unhandled + not ignores --> store
                     print(line)
+                    # unhandled + not ignores --> store
                     self.stored_lines.append(line)
 
-                if self.exit_code is not None:
+                if self.exited:
                     break
+
+            if self.exit_code != 0:
+                self.stderr = process.stderr.read1().decode('utf-8')
 
     def _check_for_handlers(self, line, process):
         handled = False
@@ -177,7 +190,7 @@ if __name__ == '__main__':
     cmd = [
         "python",
         "-u",  # Unbuffered stdout and stderr
-        "cde_cli_simulator.py",
+        CLI_SIMULATOR_FILE_PATH,
     ]
     parser = CdeCliJsonParser(cmd)
     print(parser.parse_job_names())
