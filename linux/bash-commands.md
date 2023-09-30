@@ -74,3 +74,59 @@ echo ${array[0]}
 echo ${array[1]}
 echo ${array[@]}
 ```
+
+
+
+### Argument parsing example
+```
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+  -v|--version)
+  DEX_IMAGE_TAG="$2"
+  shift # past argument
+  shift # past value
+  ;;
+
+  -h|--help)
+  shift # past argument
+  help
+  exit 0
+  ;;
+
+  -f|--fullstack)
+  FULLSTACK=true
+  shift # past argument
+  ;;
+
+  -cl|--custom-liftie)
+  CUSTOM_LIFTIE=true
+  shift # past argument
+  ;;
+
+  -t|--tag)
+  WORKLOAD_IMAGE_TAG="$2"
+  shift
+  shift
+  ;;
+
+  --ttl)
+  TTL="$2"
+  shift
+  shift
+  ;;
+
+  -sb|--skip-build)
+  SKIP_BUILD=true
+  shift
+  ;;
+
+
+  *)
+  invalid_arg $1
+  exit 1
+  ;;
+esac
+done
+```
