@@ -152,6 +152,9 @@ Text manipulation commands
 ```for i in `ls -tr1 | sort | cut -d'.' -f1`; do echo $i.json `date -f "%s" -j $(($i / 1000 - 9*3600)) "+%Y%m%d-%H%M%S"`; done```
 
 
+4. Grep for something, in specific types of files
+```grep -inR --include='*.yaml' "previousCDEVersion"```
+
 Other tricks
 ============
 
