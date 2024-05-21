@@ -136,25 +136,6 @@ Rsync / SSH / scp commands
 ```scp snemeth@<HOST>:642171.tar.gz /Users/szilardnemeth/Downloads/```
 
 
-Text manipulation commands
-==========================
-
-1. Replace spaces with newlines (tr): 
-
-```cat /proc/19368/environ | tr '\0' '\n'```
-
-2. Grep for multiple patterns: 
-
-```grep "<pattern1> \|<pattern2>" -A2 <inputfile>```
-
-3. Format timestamps (epoch): 
-
-```for i in `ls -tr1 | sort | cut -d'.' -f1`; do echo $i.json `date -f "%s" -j $(($i / 1000 - 9*3600)) "+%Y%m%d-%H%M%S"`; done```
-
-
-4. Grep for something, in specific types of files
-```grep -inR --include='*.yaml' "previousCDEVersion"```
-
 Other tricks
 ============
 
