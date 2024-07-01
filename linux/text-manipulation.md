@@ -16,6 +16,7 @@
 
 
 ## Match and extract multiple parts of lines (e.g. two dates)
+https://stackoverflow.com/questions/48458249/grep-show-two-parts-of-matching-line
 Input: 
 ```
 input=$(cat <<EOF 
