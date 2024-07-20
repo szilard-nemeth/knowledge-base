@@ -37,3 +37,26 @@ Mac OS: https://superuser.com/questions/115553/netcat-on-mac-os-x
 How can I list my open network ports with netstat? https://apple.stackexchange.com/questions/117644/how-can-i-list-my-open-network-ports-with-netstat
 
 `sudo lsof -PiTCP -sTCP:LISTEN` and `netstat -anvp tcp | awk 'NR<3 || /LISTEN/'`
+
+
+## Finding the PID of the process using a specific port?
+https://unix.stackexchange.com/questions/106561/finding-the-pid-of-the-process-using-a-specific-port
+
+On modern systems, `ss` is the appropriate tool to use to get this information:
+
+With `ss`: 
+```
+sudo ss -lptn 'sport = :80'
+```
+
+With `netstat` + `sudo`
+```
+$ sudo netstat -nlp | grep :80
+tcp  0  0  0.0.0.0:80  0.0.0.0:*  LISTEN  125004/nginx
+```
+
+With `lsof`: 
+```
+$ sudo lsof -n -i :80 | grep LISTEN
+nginx   125004 nginx    3u  IPv4   6645      0t0  TCP 0.0.0.0:80 (LISTEN)
+```

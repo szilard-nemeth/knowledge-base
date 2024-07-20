@@ -1,4 +1,7 @@
-WGET: 
+# WGET
+
+Flags: 
+```
 -h: help of commands
 -S: writes HTTP header out to the screen
 -i: read URLs from file
@@ -24,8 +27,20 @@ WGET:
        --retry-connrefused       retry even if connection is refused.  
 –proxy=on: Turn on proxy.
 [PREREQUISITE STEP: set environment proxy variable: export http_proxy="http://proxy.example.com:8080"]
+```
 
-EXAMPLES: 
 
-Download webpage fully, convert links to relative links with proxy turned on:
+## Download to different directory
+DETAILS: https://unix.stackexchange.com/questions/23501/download-using-wget-to-a-different-directory-than-current-directory
+
+```
+wget -P /var/cache/foobar/ [...]
+wget --directory-prefix=/var/cache/foobar/ [...]
+```
+
+## Examples
+
+### Download webpage fully, convert links to relative links with proxy turned on
+```
 wget --proxy=on --mirror -p --html-extension --convert-links -P ~/_USEFUL_SAVED_WEBPAGES_FULL http://www.linuxcommand.org/index.php
+```

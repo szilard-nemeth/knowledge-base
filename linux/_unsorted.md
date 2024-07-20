@@ -1,46 +1,3 @@
-File operations (find / ls)
-===========================
-1. Extract files from jar file to console, print with separator
-
-```find . -iname "*<somename>.jar" -exec sh -c "echo file: {}; unzip -p {} META-INF/services/javax.ws.rs.ext.MessageBodyWriter; echo '$\n\n'" \;```
-
-2. List recursive, show depth: 
-
-```ls /export/apps -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'```
-
-
-3. Remove multiple files: 
-
-```find . -iname *versionsBackup -print0 | xargs -0 rm```
-
-4. Find for specific file types, grep in them:
-
-```find / -regex ".*\.\(xml\|txt\|ini\|cfg\)" 2>/dev/null | xargs grep <string>```
-
-5. Find multiple files, with exclusion of filenames:
-
-```find /opt/hadoop/share/hadoop/yarn/ -iname 'hadoop-yarn-server*nodemanager*' ! -iname "*test*.jar" ! -iname "*sources*jar" -printf "unzip -c %p | grep -q '' && echo %p\n" | sh```
-
-6. Find and do something with results:
-```
-find . -type d -name venv -print0 | xargs -0 <command>
-```
-
-7. Cat a file, then invoke xargs per line:
-Related SO answer: https://stackoverflow.com/a/65708689/1106893
-```
-cat ~/Downloads/tmp | xargs -n1 -I{} md5 {}
-```
-
-Example: 
-```
-find . -type d -name venv -print0 | xargs -0 -I % find % -type d | grep ".*pythoncommons\|python_commons.*"
-```
-
-7. Find + xargs, use special replacement character
-```
-find . -type d -name venv -print0 | xargs -0 -I % sh -c 'find % -type d'
-```
 
 Compression commands
 ===========================
@@ -120,18 +77,14 @@ Find out linux version (method 4):
 
 
 
-Rsync / SSH / scp commands
+SSH / scp commands
 ====================
 
-1. Rsync whole folder to remote machine:
-
-```rsync -a <dir> <user>@$<host>:```
-
-2. Open a SSH tunnel: https://plenz.com/tunnel-everything.php
+## Open a SSH tunnel: https://plenz.com/tunnel-everything.php
 
 ```ssh -NL 2345:127.0.0.1:8000 <user>@<host>```
 
-3. Scp a file from a remote host
+## Scp a file from a remote host
 
 ```scp snemeth@<HOST>:642171.tar.gz /Users/szilardnemeth/Downloads/```
 
@@ -168,17 +121,3 @@ Command to query reserved block count:
 Command to change reserved block count, -m0 means 0 percent:
 
 ```sudo /sbin/tune2fs -m0 /dev/md0```
-
-
-Process commands
-============
-Kill process based on grep expression:
-```kill $(ps aux | grep 'mapreduce-examples' | awk '{print $2}')```
-
-Wait for process to complete by its pid:
-```tail --pid=$pid -f /dev/null```
-Details: https://unix.stackexchange.com/a/427133/189441
-
-
-Print all process names that are connected to the internet: 
-```sudo lsof -nPi | cut -f 1 -d " " | uniq | tail -n  +2```

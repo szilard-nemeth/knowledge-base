@@ -147,3 +147,18 @@ $ git filter-branch --force --index-filter \
   "git rm --cached --ignore-unmatch PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA" \
   --prune-empty --tag-name-filter cat -- --all
 ```
+
+## Make git undo any whitespace-only changes?
+https://stackoverflow.com/questions/13793241/make-git-undo-any-whitespace-only-changes
+
+> If your changes are not staged
+To stage changes that are not just whitespace changes, you can do:
+
+```
+git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero - 
+```
+
+Afterwards, to remove all unstaged changes (those changes that differ only in whitespace), you can do:
+```
+git checkout .
+```
