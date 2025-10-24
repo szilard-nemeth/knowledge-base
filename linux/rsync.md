@@ -28,3 +28,8 @@ Or from the remote host, assuming you really want to work this way and your loca
 ```
 rsync -chavzP --stats /path/to/copy user@host.remoted.from:/path/to/local/storage
 ```
+
+## Rsync difference between --checksum and --ignore-times options
+https://serverfault.com/questions/211005/rsync-difference-between-checksum-and-ignore-times-options
+
+Good answer: https://serverfault.com/a/211083

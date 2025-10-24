@@ -77,18 +77,6 @@ Find out linux version (method 4):
 
 
 
-SSH / scp commands
-====================
-
-## Open a SSH tunnel: https://plenz.com/tunnel-everything.php
-
-```ssh -NL 2345:127.0.0.1:8000 <user>@<host>```
-
-## Scp a file from a remote host
-
-```scp snemeth@<HOST>:642171.tar.gz /Users/szilardnemeth/Downloads/```
-
-
 Other tricks
 ============
 

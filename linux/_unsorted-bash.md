@@ -16,6 +16,9 @@ do
 done
 ```
 
+## Simple for loop
+https://stackoverflow.com/questions/49110/how-do-i-write-a-for-loop-in-bash
+
 More info: https://stackoverflow.com/a/35894538/1106893
 http://www.tldp.org/LDP/abs/html/string-manipulation.html
 

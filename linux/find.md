@@ -41,3 +41,14 @@ find . -type d -name venv -print0 | xargs -0 -I % find % -type d | grep ".*pytho
 ```
 find . -type d -name venv -print0 | xargs -0 -I % sh -c 'find % -type d'
 ```
+
+
+## Command to delete directories whose contents are less than a given size
+https://unix.stackexchange.com/a/214091
+With GNU `find` and GNU `coreutils`, and assuming your directories don't have newlines in their names:
+
+```
+find ~/foo -mindepth 1 -maxdepth 1 -type d -exec du -ks {} + | awk '$1 <= 50' | cut -f 2-
+```
+
+This will list directories with total contents smaller than 50K. If you're happy with the results and you want to delete them, add `| xargs -d \\n rm -rf` to the end of the command line.

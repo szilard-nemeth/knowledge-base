@@ -2,6 +2,28 @@
 
 ```cat /proc/19368/environ | tr '\0' '\n'```
 
+## Replace newline in variable
+https://unix.stackexchange.com/questions/57124/remove-newline-from-unix-variable
+
+`website=$(sed 's|/|\\/|g' <<< $website)`
+
+
+Bash parameter expansion: https://unix.stackexchange.com/a/57128
+```
+dt=${dt//$'\n'/} # Remove all newlines.
+dt=${dt%$'\n'}   # Remove a trailing newline.
+```
+
+## Replace text
+https://stackoverflow.com/questions/6744006/can-i-use-sed-to-manipulate-a-variable-in-bash
+Bash actually supports this sort of replacement natively:
+
+```
+${parameter/pattern/string} — replace the first match of pattern with string.
+${parameter//pattern/string} — replace all matches of pattern with string.
+```
+
+
 ## Grep for multiple patterns: 
 
 ```grep "<pattern1> \|<pattern2>" -A2 <inputfile>```
@@ -13,6 +35,15 @@
 
 ## Grep for something, in specific types of files
 ```grep -inR --include='*.yaml' "previousCDEVersion"```
+
+
+## Grep in files with certain extensions
+https://stackoverflow.com/questions/12516937/how-can-i-grep-recursively-but-only-in-files-with-certain-extensions
+
+```
+grep -inr --include \*.md --include \*.txt CP_Image /path/to/file
+```
+
 
 
 ## Match and extract multiple parts of lines (e.g. two dates)
@@ -37,4 +68,39 @@ echo $input | grep "Handling instance" | sed -E 's/(2024-05-09T[0-9:.Z]+).*(last
 ### Parse from alias
 ```
 alias goto-dex-7712-clitesting | grep -o "=.*" | cut -d "'" -f2 | cut -d ' ' -f2
+```
+
+### Grep multiple exclude extensions
+https://superuser.com/questions/509601/grep-multiple-exclude-extension
+
+```
+grep -r --exclude=\*.{html,htm,js} "li" *
+```
+
+
+### Grep multiple excludes
+https://stackoverflow.com/questions/16212656/grep-exclude-multiple-strings
+```
+grep -Ev 'def|jkl' filename.txt
+```
+
+
+### Cut something by multiple whitespace
+
+https://unix.stackexchange.com/questions/109835/how-do-i-use-cut-to-separate-by-multiple-whitespace
+```
+< file tr -s ' ' | cut -d ' ' -f 8
+```
+
+
+### Truncate long matching lines with grep
+https://stackoverflow.com/questions/2034799/how-to-truncate-long-matching-lines-returned-by-grep-or-ack
+
+```
+grep -oE ".{0,10}mysearchstring.{0,10}" myfile.txt
+```
+
+Example full command: 
+```
+grep -oE ".{0,10}spark.driver.extraJavaOptions.{0,10}" ./DEX-7051/testing/20230612-system-testing/system-test-result-files-20230614/system-testing-log.txt\
 ```
