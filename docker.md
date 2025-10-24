@@ -53,3 +53,14 @@ docker image prune --all --filter \"until=504h\"
 ```
 docker rmi \$(docker images --filter \"dangling=true\" -q --no-trunc)
 ```
+
+
+## Docker multi arch
+https://docs.docker.com/desktop/multi-arch/
+
+### How Docker selects an image's os/arch
+https://stackoverflow.com/questions/70734073/how-docker-selects-an-images-os-arch
+
+> So it depends on the OS used when you do your docker pull.
+
+

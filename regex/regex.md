@@ -15,3 +15,7 @@
 `Hadoop YARN log test pattern: Replace `
 WHAT: `^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}(.*)`
 TO: `\1`
+
+
+## Select all headers in markdown file
+regex: `^#+ [0-9.]+.*`

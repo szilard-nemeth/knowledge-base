@@ -162,3 +162,43 @@ Afterwards, to remove all unstaged changes (those changes that differ only in wh
 ```
 git checkout .
 ```
+
+
+
+# TRICKS
+
+## git rm all removed files
+```
+git ls-files --deleted -z | xargs -0 git rm
+```
+
+## git add files matching pattern
+
+### For modified files already known to git
+```
+git ls-files --modified | grep 'MOVED' | xargs git add
+```
+
+### For untracked files
+
+Example 1
+```
+find . -name '*.log' -print0 | xargs -0 git add
+```
+
+
+Example 2
+```
+find . -name '*MOVED*' -not -name "*REMOVED*" -print0 | xargs -0 git add
+```
+
+Example 3
+```
+git ls-files --others --exclude-standard | grep zip | xargs git add
+```
+
+
+## Get number of added/changed/removed files from commit
+```
+git diff-tree -r --name-only --no-commit-id $COMMIT | wc -l
+```
